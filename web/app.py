@@ -46,17 +46,17 @@ def upload_image():
         or "use_password" not in request.form  \
         or "password" not in request.form:
         return jsonify({"Error": "Input not found."})
-    
+
     file = request.files["file"]  # uploaded file
     ext = str(get_ext(file.filename))
     if ext not in ALLOWED_EXTENSIONS:
         return jsonify({"Error": f"Invalid extension: {ext}"})
-    
+
     # Compute informations
     hash_file = str(hashlib.md5(file.read()).hexdigest())
     hash_full = hash_file
     original_name = str(file.filename)
-    use_password = bool(request.form["use_password"] == "true")
+    use_password = request.form["use_password"] == "true"
     password = str(request.form["password"])
     if use_password:
         pwd = password.encode("utf-8")
@@ -121,7 +121,7 @@ def upload_image():
         data["images"][hash_file]["names"].append(original_name)
     if use_password and password not in data["images"][hash_file]["passwords"]:
         data["images"][hash_file]["passwords"].append(password)
-    
+
     with open(f"{UPLOAD_FOLDER}/stats.json", "w") as jsonFile:
         json.dump(data, jsonFile)
 

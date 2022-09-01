@@ -16,7 +16,7 @@ import string
 def rand_string(length=10):
     """Generate random string [a-zA-Z0-9] with size of @length."""
     charset = string.ascii_uppercase+string.ascii_lowercase+string.digits
-    return ''.join((random.choice(charset) for i in range(length)))
+    return ''.join(random.choice(charset) for _ in range(length))
 
 
 def cmdline(cmd, shell=True):
@@ -31,9 +31,7 @@ def cmdline(cmd, shell=True):
 
 def rm_ext(filename):
     """Remove filename @filename extention if exist."""
-    if "." in filename:
-        return '.'.join(filename.split(".")[:-1])
-    return filename
+    return '.'.join(filename.split(".")[:-1]) if "." in filename else filename
 
 
 def get_ext(filename):

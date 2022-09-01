@@ -46,20 +46,21 @@ class View(Thread):
         npimg = np.array(img_pil)  # rgb
 
         # generate images from numpy array and save
-        self.compute_layers(npimg, img_pil.mode, f"image_rgb")  # rgb
-        self.compute_layers(npimg[:, :, 0], 'L', f"image_r")  # r
-        self.compute_layers(npimg[:, :, 1], 'L', f"image_g")  # g
-        self.compute_layers(npimg[:, :, 2], 'L', f"image_b")  # b
+        self.compute_layers(npimg, img_pil.mode, "image_rgb")
+        self.compute_layers(npimg[:, :, 0], 'L', "image_r")
+        self.compute_layers(npimg[:, :, 1], 'L', "image_g")
+        self.compute_layers(npimg[:, :, 2], 'L', "image_b")
 
         # set images names
-        images_name = {}
-        images_name["Supperimposed"] = [f"image_rgb_{i+1}.png" for i in range(8)]
-        images_name["Red"] = [f"image_r_{i+1}.png" for i in range(8)]
-        images_name["Green"] = [f"image_g_{i+1}.png" for i in range(8)]
-        images_name["Blue"] = [f"image_b_{i+1}.png" for i in range(8)]
+        images_name = {
+            "Supperimposed": [f"image_rgb_{i + 1}.png" for i in range(8)],
+            "Red": [f"image_r_{i + 1}.png" for i in range(8)],
+            "Green": [f"image_g_{i + 1}.png" for i in range(8)],
+            "Blue": [f"image_b_{i + 1}.png" for i in range(8)],
+        }
 
         if img_pil.mode == "RGBA":  # Should be RGB or RGBA
-            self.compute_layers(npimg[:, :, 3], 'L', f"image_a")  # b
+            self.compute_layers(npimg[:, :, 3], 'L', "image_a")
             images_name["Alpha"] = [f"image_a_{i+1}.png" for i in range(8)]
 
         return images_name

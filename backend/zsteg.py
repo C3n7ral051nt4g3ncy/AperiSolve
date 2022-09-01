@@ -38,7 +38,7 @@ class Zsteg(Thread):
         # First verify if we do not already compute for original image
         md5_image = self.config["md5_image"]
         if self.config["md5_image"] != self.config["md5_full"] \
-           and os.path.isfile(f"{UPLOAD_FOLDER}/{md5_image}/zsteg.txt") :
+               and os.path.isfile(f"{UPLOAD_FOLDER}/{md5_image}/zsteg.txt"):
             cmd_exec(f"cp {UPLOAD_FOLDER}/{md5_image}/zsteg.7z {self.folder}/zsteg.7z")
             cmd_exec(f"cp {UPLOAD_FOLDER}/{md5_image}/zsteg.txt {self.folder}/zsteg.txt")
         else: # Else compute
@@ -50,26 +50,26 @@ class Zsteg(Thread):
                 img_pil = img_pil.convert('RGBA')  # Cast RGBA PNG
                 img = f"{c_input}_zsteg.png"  # New name
                 img_pil.save(f"{img}")
-            
+
             if self.config["zsteg_all"]:
                 output = cmd_exec(f"zsteg {img} --all")
             else:
                 output = cmd_exec(f"zsteg {img}")
             with open(f"{self.folder}/zsteg.txt", "w") as f:
                 f.write(output)
-            
-            # Extract files
-            chans = []  # Extract zsteg chans containing "file:"
+
             rzsteg_out = re.split("\r|\n", output)
-            for elt in rzsteg_out:
-                if elt[23:28] == "file:" and "," in elt[:20]:  # , Keep channels only
-                    chans.append(elt[:20].strip())
-            
-            if len(chans) > 0 and self.config["zsteg_ext"]:
+            chans = [
+                elt[:20].strip()
+                for elt in rzsteg_out
+                if elt[23:28] == "file:" and "," in elt[:20]
+            ]
+
+            if chans and self.config["zsteg_ext"]:
                 cmd_exec(f"mkdir {self.folder}/zsteg")
                 for channel in chans:
                     cmd_exec(f"zsteg {img} -E {channel} > {self.folder}/zsteg/{channel.replace(',','_')}")
-                
+
                 cmd_exec(f"7z a {self.folder}/zsteg.7z {self.folder}/zsteg/*")
                 cmd_exec(f"rm -r {self.folder}/zsteg")
 

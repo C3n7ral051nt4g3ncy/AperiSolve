@@ -18,7 +18,7 @@ class FileLock(object):
         if timeout is not None and delay is None:
             raise ValueError("If timeout is not None, then delay must not be None.")
         self.is_locked = False
-        self.lockfile = os.path.join(os.getcwd(), "%s.lock" % file_name)
+        self.lockfile = os.path.join(os.getcwd(), f"{file_name}.lock")
         self.file_name = file_name
         self.timeout = timeout
         self.delay = delay
@@ -40,7 +40,7 @@ class FileLock(object):
                 if e.errno != errno.EEXIST:
                     raise
                 if self.timeout is None:
-                    raise FileLockException("Could not acquire lock on {}".format(self.file_name))
+                    raise FileLockException(f"Could not acquire lock on {self.file_name}")
                 if (time.time() - start_time) >= self.timeout:
                     raise FileLockException("Timeout occured.")
                 time.sleep(self.delay)

@@ -33,9 +33,7 @@ class Steghide(Thread):
         c_input = f"{self.folder}/{image}"  # image.png
         fold = f"{self.folder}/steghide"
         cmd_exec(f"mkdir {fold}")
-        passwd = ''
-        if self.config["use_password"]:
-            passwd = self.config["password"]
+        passwd = self.config["password"] if self.config["use_password"] else ''
         output = cmd_exec(f"cd {fold} && steghide extract -sf {c_input} -p {quote(passwd)} 2>&1")
         cmd_exec(f"7z a {self.folder}/steghide.7z {fold}/*")
         cmd_exec(f"rm -r {fold}")

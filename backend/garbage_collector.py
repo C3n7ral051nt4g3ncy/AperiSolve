@@ -13,11 +13,8 @@ from config import DELAY_GARBAGE, UPLOAD_FOLDER, MAX_STORE_TIME
 def get_top_images(n=10):
     with open(f"{UPLOAD_FOLDER}/stats.json", "r") as jsonFile:
         stats = json.load(jsonFile)
-    count = {}
-    for img in stats["images"]:
-        count[img] = stats["images"][img]["count"]
-    top = {k: v for k, v in sorted(count.items(), key=lambda item: item[1])[::-1][:n]}
-    return top
+    count = {img: stats["images"][img]["count"] for img in stats["images"]}
+    return dict(sorted(count.items(), key=lambda item: item[1])[::-1][:n])
 
 while True:
     dirs = os.listdir(UPLOAD_FOLDER)
